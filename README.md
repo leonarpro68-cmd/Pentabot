@@ -48,7 +48,7 @@ MuJoCo desde el CAD de Inventor y entrenado con aprendizaje por refuerzo (PPO) s
 | Modelo MuJoCo (`model/`) | Hecho y validado (`scripts/test_modelo.py`) |
 | Tarea de RL `Pentabot-Flat` | Entrenada: 3000 iteraciones, ~3 h, sin caídas |
 | Control con mando PS5 en simulación | Funciona |
-| Política sin encoders (para servos sin realimentación) | Pendiente |
+| Política sin encoders (para servos sin realimentación) | Hecha: sigue el 83-90 % de la velocidad pedida y no se cae ([detalle](CONTEXTO.md#4-historia-y-estado-actual)) |
 | Ejecutar la política en la ESP32 | Pendiente |
 
 Con la política actual, el robot sigue alrededor del 77 % de la velocidad pedida en el entrenamiento.

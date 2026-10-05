@@ -4,7 +4,7 @@
 > cero en tu máquina y qué falta. También sirve como contexto para un asistente de IA:
 > pásale este archivo al empezar.
 >
-> Actualizado: 2026-10-04.
+> Actualizado: 2026-10-05.
 
 ---
 
@@ -42,7 +42,7 @@ Hay **dos sitios**, y es importante no confundirlos:
    mjlab/tarea/      tareas de RL: env_cfgs.py (Pentabot-Flat), sin_encoder.py (Pentabot-Flat-SinEncoder),
                      rl_cfg.py (PPO), __init__.py (registro de las tareas)
    mjlab/scripts/    entrenar, ver, mando PS5, evaluar, grabar el GIF y los renders
-   politica/         política vieja con encoders (model_3000.pt, policy.onnx, params/)
+   politica/         con encoders (model_3000.pt, policy.onnx) y sin_encoder/ (la desplegable)
    docs/             MODELO.md (cómo se hizo el modelo) y PENDIENTE.md (plan de despliegue)
    imagenes/         renders de la simulación
    ```
@@ -137,12 +137,33 @@ python scripts/train.py Pentabot-Flat-SinEncoder --env.scene.num-envs=256 --agen
 - **No sirve en el robot real**: usa `joint_pos` y `joint_vel` (30 de sus 56 entradas), y el MG995 no
   informa de su posición.
 
-### Fase 2 (en curso): `Pentabot-Flat-SinEncoder`
+### Fase 2 (hecha): `Pentabot-Flat-SinEncoder`
 - Archivo: `mjlab/tarea/sin_encoder.py`; PPO en `rl_cfg.py` (`pentabot_sin_encoder_ppo_runner_cfg`).
-- **Lanzada el 2026-10-04** en la máquina de Leo: 4096 entornos y 5001 iteraciones (~5 h). Los logs van
-  a `logs/rsl_rl/pentabot_sin_encoder/<fecha>/`.
-- Sin resultados todavía. Al terminar hay que evaluarla con `mjlab/scripts/evaluar_sin_encoder.py`
-  (sección 7). Los checkpoints `.pt` **no están en git**: si los necesitas, pídeselos a Leo.
+- Entrenada del 2026-10-04 al 2026-10-05: 4096 entornos, 5000 iteraciones, ~5 h en una RTX 4060.
+- Política en **`politica/sin_encoder/`**: `model_5000.pt`, `policy.onnx` (entrada `obs` [1, 130],
+  salida `actions` [1, 15]) y `params/`.
+- Evaluación con `evaluar_sin_encoder.py`: 256 robots con toda la aleatorización y el IMU con ruido y sesgo.
+
+| Comando | Sigue | Caídas | < 3 pies | Par p95 | Inclinación |
+|---|---|---|---|---|---|
+| adelante 0.20 m/s | 83 % | 0 % | 1.3 % | 72 % | 1.2° |
+| adelante 0.10 m/s | 85 % | 0 % | 0.1 % | 65 % | 1.2° |
+| atrás 0.15 m/s | 88 % | 0 % | 0.4 % | 69 % | 2.0° |
+| lateral 0.15 m/s | 90 % | 0 % | 0.3 % | 70 % | 1.3° |
+| diagonal 0.10 m/s | 87 % | 0 % | 0.1 % | 67 % | 1.2° |
+| giro 0.50 rad/s | 84 % | 0 % | 0.1 % | 72 % | 1.5° |
+| quieto | — | 0 % | 0 % | **89 %** | 0.8° |
+
+- Cumple todos los criterios de la sección 7 **salvo el par en parado**. Cuando está quieto con las 5 patas
+  apoyadas, los servos se empujan entre sí: `hip_yaw` y `hip_pitch` trabajan de media al 45-48 % de su
+  límite y pasan el 11-13 % del tiempo por encima del 80 %. El motivo es el error de cero del servo
+  (±3° en la aleatorización): con 5 apoyos la cadena queda cerrada, y con kp = 11.2 N·m/rad un error
+  de 0.05 rad ya supone 0.56 N·m, el 57 % del bloqueo. Al caminar baja (p95 de 56-81 %) porque los
+  pies se levantan y se recolocan.
+  **Consecuencia práctica: calibrar cada servo con un error menor de 1°.** Si no, el robot real se
+  calentará estando quieto.
+- El "seguimiento" de tensorboard (`track_linear_velocity` ≈ 1.35 de 2.0) no es un porcentaje de
+  velocidad: es un kernel exponencial. El número que importa es el `sigue` de esta tabla.
 
 ### Fase 3 (pendiente): ejecutar la política en la ESP32
 Ver la sección 8 y `docs/PENDIENTE.md`.
