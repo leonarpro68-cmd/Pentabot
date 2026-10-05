@@ -44,3 +44,13 @@ def pentabot_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
     num_steps_per_env=24,
     max_iterations=3001,
   )
+
+
+def pentabot_sin_encoder_ppo_runner_cfg() -> RslRlOnPolicyRunnerCfg:
+  """Sin encoders: el actor tiene que inferir el estado de las patas del historial,
+  asi que aprende mas lento; mas iteraciones y algo menos de ruido inicial."""
+  cfg = pentabot_ppo_runner_cfg()
+  cfg.actor.distribution_cfg["init_std"] = 0.8
+  cfg.experiment_name = "pentabot_sin_encoder"
+  cfg.max_iterations = 5001
+  return cfg

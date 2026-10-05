@@ -1,5 +1,7 @@
 # Pentabot
 
+> ¿Vas a trabajar en el proyecto desde otra computadora? Empieza por [`CONTEXTO.md`](CONTEXTO.md).
+
 Robot caminante de **5 patas y 15 grados de libertad** (3 servos TowerPro MG995 por pata), modelado en
 MuJoCo desde el CAD de Inventor y entrenado con aprendizaje por refuerzo (PPO) sobre
 [mjlab](https://github.com/mujocolab/mjlab) / `unitree_rl_mjlab`.

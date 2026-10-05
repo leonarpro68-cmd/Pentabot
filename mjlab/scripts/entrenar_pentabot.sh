@@ -5,7 +5,8 @@ set -uo pipefail
 
 REPO="$HOME/unitree_rl_mjlab"
 NUM_ENVS="${1:-4096}"
-LOG="$REPO/logs/entrenamiento_pentabot.log"
+TAREA="${2:-Pentabot-Flat}"        # o Pentabot-Flat-SinEncoder
+LOG="$REPO/logs/entrenamiento_${TAREA}.log"
 TB_LOG="$REPO/logs/tensorboard.log"
 PUERTO=6006
 
@@ -17,10 +18,11 @@ cd "$REPO"
 mkdir -p "$REPO/logs"
 
 echo "=== Entrenamiento del Pentabot ==="
+echo "Tarea     : $TAREA"
 echo "Entornos  : $NUM_ENVS"
 echo "Log       : $LOG"
 
-nohup python scripts/train.py Pentabot-Flat --env.scene.num-envs="$NUM_ENVS" \
+nohup python scripts/train.py "$TAREA" --env.scene.num-envs="$NUM_ENVS" \
   > "$LOG" 2>&1 &
 PID_TRAIN=$!
 echo "Entrenamiento lanzado (PID $PID_TRAIN)"
@@ -29,7 +31,7 @@ echo "Entrenamiento lanzado (PID $PID_TRAIN)"
 if ss -ltn 2>/dev/null | grep -q ":$PUERTO "; then
   echo "Tensorboard ya estaba escuchando en el puerto $PUERTO"
 else
-  nohup tensorboard --logdir "$REPO/logs/rsl_rl/pentabot_velocity" --port "$PUERTO" \
+  nohup tensorboard --logdir "$REPO/logs/rsl_rl" --port "$PUERTO" \
     > "$TB_LOG" 2>&1 &
   echo "Tensorboard lanzado (PID $!)"
 fi
