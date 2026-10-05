@@ -37,7 +37,7 @@ from mjlab.actuator import DelayedActuator
 from mjlab.envs import ManagerBasedRlEnvCfg
 from mjlab.envs.mdp import dr
 from mjlab.envs.mdp.actions import JointPositionAction, JointPositionActionCfg
-from mjlab.managers.event_manager import EventTermCfg
+from mjlab.managers.event_manager import EventTermCfg, requires_model_fields
 from mjlab.managers.observation_manager import ObservationGroupCfg, ObservationTermCfg
 from mjlab.managers.reward_manager import RewardTermCfg
 from mjlab.managers.scene_entity_config import SceneEntityCfg
@@ -158,6 +158,7 @@ def apoyos_minimos(env: ManagerBasedRlEnv, sensor_name: str, minimo: int) -> tor
 ##
 
 
+@requires_model_fields("actuator_forcerange")
 def limites_par(
   env: ManagerBasedRlEnv,
   env_ids: torch.Tensor | None,

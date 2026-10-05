@@ -142,19 +142,25 @@ python scripts/train.py Pentabot-Flat-SinEncoder --env.scene.num-envs=256 --agen
 - Entrenada del 2026-10-04 al 2026-10-05: 4096 entornos, 5000 iteraciones, ~5 h en una RTX 4060.
 - Política en **`politica/sin_encoder/`**: `model_5000.pt`, `policy.onnx` (entrada `obs` [1, 130],
   salida `actions` [1, 15]) y `params/`.
-- Evaluación con `evaluar_sin_encoder.py`: 256 robots con toda la aleatorización y el IMU con ruido y sesgo.
+- Evaluación en **condiciones de robot real** con `evaluar_sin_encoder.py` (256 robots, toda la
+  aleatorización, juego de engranajes, IMU con ruido y sesgo). La comparativa completa con la versión con
+  encoders está en [`COMPARATIVA.md`](COMPARATIVA.md).
 
 | Comando | Sigue | Caídas | < 3 pies | Par p95 | Inclinación |
 |---|---|---|---|---|---|
-| adelante 0.20 m/s | 83 % | 0 % | 1.3 % | 72 % | 1.2° |
-| adelante 0.10 m/s | 85 % | 0 % | 0.1 % | 65 % | 1.2° |
-| atrás 0.15 m/s | 88 % | 0 % | 0.4 % | 69 % | 2.0° |
-| lateral 0.15 m/s | 90 % | 0 % | 0.3 % | 70 % | 1.3° |
-| diagonal 0.10 m/s | 87 % | 0 % | 0.1 % | 67 % | 1.2° |
-| giro 0.50 rad/s | 84 % | 0 % | 0.1 % | 72 % | 1.5° |
-| quieto | — | 0 % | 0 % | **89 %** | 0.8° |
+| adelante 0.20 m/s | 83 % | 0 % | 2.9 % | 82 % | 1.3° |
+| adelante 0.10 m/s | 85 % | 0 % | 0.6 % | 74 % | 1.2° |
+| atrás 0.15 m/s | 88 % | 0 % | 1.2 % | 79 % | 2.0° |
+| lateral 0.15 m/s | 89 % | 0 % | 1.2 % | 80 % | 1.3° |
+| diagonal 0.10 m/s | 87 % | 0 % | 0.5 % | 75 % | 1.2° |
+| giro 0.50 rad/s | 84 % | 0 % | 0.6 % | 79 % | 1.5° |
+| quieto | — | 0 % | 0 % | 85 % | 0.8° |
 
-- Cumple todos los criterios de la sección 7 **salvo el par en parado**. Cuando está quieto con las 5 patas
+- **Error corregido después de entrenar:** `limites_par` (par máximo ±20 %) no tenía el decorador
+  `@requires_model_fields("actuator_forcerange")`, así que todos los robots compartían los mismos límites.
+  Ya está corregido en `sin_encoder.py`, y las evaluaciones de arriba usan la versión correcta: la
+  política aguanta sin caerse. Un reentrenamiento futuro ya incluirá la variación de par por robot.
+- Cumple todos los criterios de la sección 7 **salvo el par en parado** (85–95 % según la evaluación). Cuando está quieto con las 5 patas
   apoyadas, los servos se empujan entre sí: `hip_yaw` y `hip_pitch` trabajan de media al 45-48 % de su
   límite y pasan el 11-13 % del tiempo por encima del 80 %. El motivo es el error de cero del servo
   (±3° en la aleatorización): con 5 apoyos la cadena queda cerrada, y con kp = 11.2 N·m/rad un error
@@ -208,7 +214,7 @@ en el aire, contactos y fuerzas de contacto. El robot real nunca lo necesita.
 | Qué | Rango | Por qué |
 |---|---|---|
 | kp del servo | ×0.6–1.4 | el MG995 no está identificado y varía entre unidades |
-| Par máximo | ×0.8–1.2 | ídem |
+| Par máximo | ×0.8–1.2 | ídem (*en el entrenamiento de la fase 2 no variaba entre robots, ver sección 4*) |
 | Retardo del servo | 4–32 ms | bucle de la ESP32 + I2C + PWM de 20 ms del PCA9685 |
 | Cero del servo | ±0.05 rad (±3°) | calibración en µs imperfecta |
 | Juego de engranajes | ±0.02 rad por paso | holgura del MG995 |

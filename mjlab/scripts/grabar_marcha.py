@@ -1,7 +1,8 @@
 """Graba la marcha del Pentabot con la politica entrenada (sin ventana) y genera el GIF.
 
 Se ejecuta con el entorno de unitree_rl_mjlab y la tarea Pentabot-Flat ya instalada:
-  python grabar_marcha.py [checkpoint.pt] [carpeta_salida]
+  python grabar_marcha.py [checkpoint.pt] [carpeta_salida] [tarea] [prefijo]
+  p. ej.: python grabar_marcha.py ~/pentabot/politica/sin_encoder/model_5000.pt ~/pentabot/imagenes Pentabot-Flat-SinEncoder sin_encoder_
 """
 import os, sys
 from pathlib import Path
@@ -19,7 +20,8 @@ from mjlab.tasks.registry import load_env_cfg, load_rl_cfg, load_runner_cls
 RAIZ = Path(__file__).resolve().parents[2]
 CKPT = sys.argv[1] if len(sys.argv) > 1 else str(RAIZ / "politica" / "model_3000.pt")
 OUT = sys.argv[2] if len(sys.argv) > 2 else str(RAIZ / "imagenes")
-TASK = "Pentabot-Flat"
+TASK = sys.argv[3] if len(sys.argv) > 3 else "Pentabot-Flat"
+PREFIJO = sys.argv[4] if len(sys.argv) > 4 else ""
 env_cfg = load_env_cfg(TASK, play=True)
 env_cfg.scene.num_envs = 1
 env_cfg.events["reset_base"].params["pose_range"]["yaw"] = (0.0, 0.0)
@@ -58,10 +60,10 @@ for (c, n) in plan:
     print(f"cmd {c}: vel media real {np.mean(vs[n//3:], axis=0)}")
 # Fotos sueltas de cada tramo y GIF reducido (~3 MB) para el README.
 for i, n in [(60, "avance"), (170, "giro"), (260, "lateral")]:
-    Image.fromarray(frames[i]).save(f"{OUT}/marcha_{n}.png")
+    Image.fromarray(frames[i]).save(f"{OUT}/{PREFIJO}marcha_{n}.png")
 ims = [Image.fromarray(x[30:]).resize((480, 254), Image.LANCZOS) for x in frames[::2]]
 base = ims[len(ims) // 3].quantize(colors=64, method=Image.Quantize.MEDIANCUT)
 pal = [im.quantize(palette=base, dither=Image.Dither.NONE) for im in ims]
-pal[0].save(f"{OUT}/pentabot_marcha.gif", save_all=True, append_images=pal[1:],
+pal[0].save(f"{OUT}/{PREFIJO}pentabot_marcha.gif", save_all=True, append_images=pal[1:],
             duration=80, loop=0, optimize=True)
 print("frames:", len(frames), "->", OUT)

@@ -1,6 +1,7 @@
 # Pentabot
 
 > ¿Vas a trabajar en el proyecto desde otra computadora? Empieza por [`CONTEXTO.md`](CONTEXTO.md).
+> Comparativa entre la política con encoders y la desplegable sin encoders: [`COMPARATIVA.md`](COMPARATIVA.md).
 
 Robot caminante de **5 patas y 15 grados de libertad** (3 servos TowerPro MG995 por pata), modelado en
 MuJoCo desde el CAD de Inventor y entrenado con aprendizaje por refuerzo (PPO) sobre
@@ -48,7 +49,7 @@ MuJoCo desde el CAD de Inventor y entrenado con aprendizaje por refuerzo (PPO) s
 | Modelo MuJoCo (`model/`) | Hecho y validado (`scripts/test_modelo.py`) |
 | Tarea de RL `Pentabot-Flat` | Entrenada: 3000 iteraciones, ~3 h, sin caídas |
 | Control con mando PS5 en simulación | Funciona |
-| Política sin encoders (para servos sin realimentación) | Hecha: sigue el 83-90 % de la velocidad pedida y no se cae ([detalle](CONTEXTO.md#4-historia-y-estado-actual)) |
+| Política sin encoders (para servos sin realimentación) | Hecha: sigue el 83-89 % de la velocidad pedida y no se cae en condiciones de robot real ([comparativa](COMPARATIVA.md)) |
 | Ejecutar la política en la ESP32 | Pendiente |
 
 Con la política actual, el robot sigue alrededor del 77 % de la velocidad pedida en el entrenamiento.

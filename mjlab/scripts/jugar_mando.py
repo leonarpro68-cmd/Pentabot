@@ -1,7 +1,7 @@
 """Pilota el bipedo (o el Pentabot) en MuJoCo con el mando de PS5 (DualSense).
 
 Uso:  python jugar_mando.py <checkpoint.pt | ultimo>  [--viewer native|viser]
-                            [--robot bipedo|pentabot]   (por defecto bipedo)
+                            [--robot bipedo|pentabot|pentabot_sin_encoder]   (por defecto bipedo)
 
 Mapeo:
   stick izquierdo arriba/abajo -> avanzar / retroceder   (lin_vel_x)
@@ -43,6 +43,7 @@ from mando_ps5 import MandoPS5, escalar  # noqa: E402
 ROBOTS = {
   "bipedo": ("Bipedo-Flat", "bipedo_velocity", -1.0),
   "pentabot": ("Pentabot-Flat", "pentabot_velocity", 1.0),
+  "pentabot_sin_encoder": ("Pentabot-Flat-SinEncoder", "pentabot_sin_encoder", 1.0),
 }
 ROBOT = sys.argv[sys.argv.index("--robot") + 1] if "--robot" in sys.argv else "bipedo"
 if ROBOT not in ROBOTS:
