@@ -27,13 +27,15 @@ python jugar_mando.py ultimo --robot pentabot     # manejarlo con el mando de PS
 
 La política actual **no sirve en el robot real**. Sus 56 entradas son: `base_ang_vel`(3), `projected_gravity`(3), `command`(3), `phase`(2), `joint_pos`(15), `joint_vel`(15) y `actions`(15). Los MG995 no tienen realimentación, así que las 30 entradas de `joint_pos`/`joint_vel` no existen en el robot real.
 
-## Tarea 1: volver a entrenar sin encoders (simulación)
+## Tarea 1: volver a entrenar sin encoders (simulación): HECHA el 2026-10-05
 
 Crear una variante `Pentabot-Flat-SinEncoder`:
-- [ ] **Actor:** quitar `joint_pos` y `joint_vel`. Dejar el IMU (gyro y gravedad), el comando, la fase y la última acción, con **historial de unos 5 pasos**.
-- [ ] **Crítico:** mantener toda la información (posiciones, velocidades y contactos). Solo se usa al entrenar.
-- [ ] **Más aleatorización del servo:** retardo, `kp` entre 0.6 y 1.4, juego de engranajes (ruido en el objetivo) y par máximo ±20 %.
-- [ ] Entrenar (~3 h) y probarlo con `jugar_mando.py`.
+- [x] **Actor:** quitar `joint_pos` y `joint_vel`. Dejar el IMU (gyro y gravedad), el comando, la fase y la última acción, con **historial de unos 5 pasos**.
+- [x] **Crítico:** mantener toda la información (posiciones, velocidades y contactos). Solo se usa al entrenar.
+- [x] **Más aleatorización del servo:** retardo, `kp` entre 0.6 y 1.4, juego de engranajes (ruido en el objetivo) y par máximo ±20 %.
+- [x] Entrenar (~3 h) y probarlo con `jugar_mando.py`.
+
+Resultado: `politica/sin_encoder/`. Sigue el 83–89 % de la velocidad pedida y no se cae en condiciones de robot real. Ver [`COMPARATIVA.md`](../COMPARATIVA.md).
 
 ## Tarea 2: ejecutar la política en la ESP32 DevKit (sin Raspberry Pi)
 
