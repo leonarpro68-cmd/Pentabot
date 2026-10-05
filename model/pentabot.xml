@@ -1,0 +1,375 @@
+<mujoco model="pentabot">
+  <!-- Generado desde Inventor (CuerpoBase.iam) por build.py/assemble.py. Unidades SI. Z arriba.
+       Pierna de referencia (q=0): L1 en pose CAD de apoyo (fémur horizontal).
+       Orden de piernas (antihorario visto desde arriba, L1 en ~37° desde +x):
+       L1=Hombro:2@36.82°, L2=Hombro:1@109.31°, L3=Hombro:5@179.96°, L4=Hombro:4@250.59°, L5=Hombro:3@323.09°
+       Convención de signos: hip_yaw + = antihorario (vista superior); hip_pitch + = sube el fémur; knee + = sube la tibia.
+       Inerciales calculados (no desde geoms): PLA impreso = cáscara 0.8 mm + relleno 17.5 %,
+       MG995 55 g, 6901 11 g, tornillería de acero. Electrónica = PLACEHOLDER 0.18 kg. -->
+  <compiler angle="radian" meshdir="assets" inertiafromgeom="false" autolimits="true"/>
+
+  <option timestep="0.002" integrator="implicitfast" cone="elliptic" impratio="10"/>
+
+  <default>
+    <default class="pentabot">
+      <default class="mg995">
+        <!-- motor: damping = tau_stall/omega_0 reproduce la curva par-velocidad;
+             armature = inercia reflejada del rotor (estimada, calibrar); frictionloss = rozamiento de engranajes -->
+        <joint type="hinge" range="-1.5708 1.5708" damping="0.1499" armature="0.005" frictionloss="0.03"/>
+        <position kp="11.241" forcerange="-0.981 0.981" ctrlrange="-1.5708 1.5708"/>
+      </default>
+      <default class="visual">
+        <geom type="mesh" contype="0" conaffinity="0" group="2" mass="0" density="0"/>
+      </default>
+      <default class="collision">
+        <!-- solo chocan con el suelo (sin auto-colisión) -->
+        <geom type="mesh" contype="0" conaffinity="1" group="3" mass="0" density="0" friction="0.5 0.005 0.0001"/>
+      </default>
+      <default class="foot">
+        <!-- esfera Ø36 mm con casquete TPU: fricción TPU-suelo ~0.9; condim 6 añade torsión/rodadura -->
+        <geom type="sphere" size="0.018" contype="0" conaffinity="1" group="3" mass="0" density="0"
+              condim="6" priority="1" friction="0.9 0.005 0.0001" solref="0.005 1" solimp="0.9 0.95 0.001"
+              rgba="1 0.235 0 1"/>
+      </default>
+      <site group="4" rgba="0 1 0 0.5"/>
+    </default>
+  </default>
+
+  <asset>
+    <mesh name="6901" file="6901.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="6901_2" file="6901_2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="BASEFINAL" file="BASEFINAL.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="CarcasaSuperiorExterna___copia" file="CarcasaSuperiorExterna___copia.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="Cuerpo" file="Cuerpo.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="Cuerpo___copia" file="Cuerpo___copia.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="PataBaseLargaRodamientoV2" file="PataBaseLargaRodamientoV2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="PataTapaLargaServoHornV2" file="PataTapaLargaServoHornV2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="PieEsfera_Nucleo_PLA" file="PieEsfera_Nucleo_PLA.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="PieEsfera_Suela_TPU" file="PieEsfera_Suela_TPU.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="Servo15" file="Servo15.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="ServomotorFinal" file="ServomotorFinal.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="ServomotorFinal_2" file="ServomotorFinal_2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="SoporteServo" file="SoporteServo.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="SoporteServoHorn" file="SoporteServoHorn.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="SoporteServoRodamiento" file="SoporteServoRodamiento.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="SoporteServoToweV2" file="SoporteServoToweV2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="baseFinalAcrilico" file="baseFinalAcrilico.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="carcasaHornFin" file="carcasaHornFin.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="carcasaRodamientoFin" file="carcasaRodamientoFin.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="servoHornArriba" file="servoHornArriba.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="servoHornRodamiento" file="servoHornRodamiento.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="servo_horn" file="servo_horn.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="servo_horn_2" file="servo_horn_2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="unionHorn" file="unionHorn.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="unionRodamiento" file="unionRodamiento.stl" scale="0.001 0.001 0.001"/>
+  </asset>
+
+  <worldbody>
+    <body name="torso" pos="-0.00329196 0.000169232 0.0123569" childclass="pentabot">
+      <freejoint name="root"/>
+      <inertial pos="-0.000171781 0.000513489 0.00774154" mass="0.914673" fullinertia="0.00458696 0.00462586 0.00795718 2.35641e-05 -1.07637e-06 3.65577e-06"/>
+      <site name="imu" pos="-6.12359e-06 -0.000170475 -0.00275249" size="0.005"/>
+      <geom class="visual" mesh="Cuerpo" pos="0.000167984 -0.000169232 -0.0145" quat="0.707107 0.707107 0 0" rgba="0.000 0.000 0.000 1"/>
+      <geom class="collision" mesh="Cuerpo" pos="0.000167984 -0.000169232 -0.0145" quat="0.707107 0.707107 0 0"/>
+      <geom class="visual" mesh="ServomotorFinal" pos="-0.0384197 -0.0862457 -0.021" quat="0.572061 0.572061 0.415627 0.415627" rgba="0.749 0.749 0.749 1"/>
+      <geom class="visual" mesh="ServomotorFinal" pos="-0.0195483 0.0931956 -0.021" quat="0.572061 0.572061 -0.415627 -0.415627" rgba="0.749 0.749 0.749 1"/>
+      <geom class="visual" mesh="ServomotorFinal" pos="0.0819806 0.0467868 -0.021" quat="-0.218508 -0.218508 0.672499 0.672499" rgba="0.749 0.749 0.749 1"/>
+      <geom class="visual" mesh="ServomotorFinal" pos="0.0701073 -0.0634674 -0.021" quat="0.218508 0.218508 0.672499 0.672499" rgba="0.749 0.749 0.749 1"/>
+      <geom class="visual" mesh="ServomotorFinal" pos="-0.0941199 0.00973077 -0.021" quat="0.707107 0.707107 0 0" rgba="0.749 0.749 0.749 1"/>
+      <geom class="visual" mesh="carcasaHornFin" pos="0.0136743 -0.00126808 0.023" quat="-0.218508 -0.218508 0.672499 0.672499" rgba="1.000 0.184 0.000 1"/>
+      <geom class="visual" mesh="carcasaRodamientoFin" pos="-0.00272996 -0.0108855 -0.021" quat="0.218508 0.218508 0.672499 0.672499" rgba="1.000 0.118 0.000 1"/>
+      <geom class="visual" mesh="carcasaHornFin" pos="0.00329661 -0.0133541 0.023" quat="0.218508 0.218508 0.672499 0.672499" rgba="1.000 0.184 0.000 1"/>
+      <geom class="visual" mesh="carcasaHornFin" pos="-0.0114048 -0.00721908 0.023" quat="0.572061 0.572061 0.415627 0.415627" rgba="1.000 0.184 0.000 1"/>
+      <geom class="visual" mesh="carcasaHornFin" pos="-0.010113 0.00865858 0.023" quat="0.707107 0.707107 0 0" rgba="1.000 0.184 0.000 1"/>
+      <geom class="visual" mesh="carcasaHornFin" pos="0.00488674 0.0123365 0.023" quat="0.572061 0.572061 -0.415627 -0.415627" rgba="1.000 0.184 0.000 1"/>
+      <geom class="visual" mesh="carcasaRodamientoFin" pos="-0.0114048 -0.00107732 -0.021" quat="0.572061 0.572061 0.415627 0.415627" rgba="1.000 0.118 0.000 1"/>
+      <geom class="visual" mesh="carcasaRodamientoFin" pos="-0.00427184 0.0105565 -0.021" quat="0.707107 0.707107 0 0" rgba="1.000 0.118 0.000 1"/>
+      <geom class="visual" mesh="carcasaRodamientoFin" pos="0.00899677 0.00736772 -0.021" quat="0.572061 0.572061 -0.415627 -0.415627" rgba="1.000 0.118 0.000 1"/>
+      <geom class="visual" mesh="carcasaRodamientoFin" pos="0.00956429 -0.00623686 -0.021" quat="-0.218508 -0.218508 0.672499 0.672499" rgba="1.000 0.118 0.000 1"/>
+      <geom class="visual" mesh="CarcasaSuperiorExterna___copia" pos="0.000131827 6.18243e-05 0.0282" quat="0.218508 0.218508 0.672499 0.672499" rgba="0.078 0.078 0.078 1"/>
+      <geom class="collision" mesh="CarcasaSuperiorExterna___copia" pos="0.000131827 6.18243e-05 0.0282" quat="0.218508 0.218508 0.672499 0.672499"/>
+      <geom class="visual" mesh="BASEFINAL" pos="0.000167984 -0.000169232 -0.0145" quat="0.707107 -0.707107 0 0" rgba="1.000 0.184 0.000 1"/>
+      <geom class="visual" mesh="baseFinalAcrilico" pos="0.000167984 -0.000169232 -0.0254317" quat="0.707107 -0.707107 0 0" rgba="0.000 0.000 0.000 1"/>
+      <geom class="collision" mesh="baseFinalAcrilico" pos="0.000167984 -0.000169232 -0.0254317" quat="0.707107 -0.707107 0 0"/>
+      <geom class="visual" mesh="Cuerpo___copia" pos="0.000176852 -0.000162789 0.0125" quat="0.707107 0.707107 0 0" rgba="1.000 0.000 0.000 1"/>
+      <geom class="visual" mesh="Cuerpo___copia" pos="0.000176852 -0.000175676 0.0125" quat="0.572061 0.572061 -0.415627 -0.415627" rgba="1.000 0.000 0.000 1"/>
+      <geom class="visual" mesh="Cuerpo___copia" pos="0.000164596 -0.000179658 0.0125" quat="-0.218508 -0.218508 0.672499 0.672499" rgba="1.000 0.000 0.000 1"/>
+      <geom class="visual" mesh="Cuerpo___copia" pos="0.000164596 -0.000158807 0.0125" quat="0.572061 0.572061 0.415627 0.415627" rgba="1.000 0.000 0.000 1"/>
+      <geom class="visual" mesh="Cuerpo___copia" pos="-0.000342978 -0.000169232 0.0125" quat="0.218508 0.218508 0.672499 0.672499" rgba="1.000 0.000 0.000 1"/>
+      <body name="L1_coxa" pos="0.100454 0.0725693 0">
+        <inertial pos="0.0285945 0.0228486 -0.000248578" mass="0.115033" fullinertia="6.50899e-05 6.83343e-05 5.68148e-05 -8.77e-06 -7.35982e-06 -6.07662e-06"/>
+        <joint name="L1_hip_yaw" class="mg995" axis="0 0 1"/>
+        <geom class="visual" mesh="SoporteServo" pos="0.0483404 0.0184345 0.128617" quat="0.672499 0.218508 -0.672499 0.218508" rgba="1.000 0.200 0.000 1"/>
+        <geom class="collision" mesh="SoporteServo" pos="0.0483404 0.0184345 0.128617" quat="0.672499 0.218508 -0.672499 0.218508"/>
+        <geom class="visual" mesh="ServomotorFinal_2" pos="0.0562516 0.0161478 0.0223" quat="0.672499 0.218508 -0.672499 0.218508" rgba="0.361 0.600 0.239 1"/>
+        <geom class="visual" mesh="SoporteServoRodamiento" pos="0.0449115 0.00667268 0.128617" quat="-0.218508 0.672499 0.218508 0.672499" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="SoporteServoHorn" pos="0.0262985 0.0487726 0.128617" quat="0.672499 0.218508 -0.672499 0.218508" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="servoHornRodamiento" pos="0.0290422 0.00255938 -0.0215" quat="0 -0.309017 0.951057 0" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="servoHornArriba" pos="0.0432184 -0.0088882 0.031" quat="0 -0.309017 0.951057 0" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="6901_2" pos="0 0 -0.028" quat="-0.218508 0.672499 0.218508 0.672499" rgba="0.898 0.898 0.898 1"/>
+        <geom class="visual" mesh="servo_horn_2" pos="0 0 0.028" quat="0 0.951057 0.309017 0" rgba="0.867 0.910 1.000 1"/>
+        <body name="L1_femur" pos="0.0341355 0.0297452 -0.0079">
+          <inertial pos="0.0549389 0.0263815 1.64958e-05" mass="0.0512586" fullinertia="7.68241e-05 0.000112082 0.00017809 -5.38767e-05 -4.26206e-08 -4.71157e-09"/>
+          <joint name="L1_hip_pitch" class="mg995" axis="0.587785 -0.809017 0"/>
+          <geom class="visual" mesh="unionRodamiento" pos="0.0407979 -0.013621 -0.015" quat="-0.218508 -0.218508 0.672499 0.672499" rgba="0.000 0.000 0.000 1"/>
+          <geom class="collision" mesh="unionRodamiento" pos="0.0407979 -0.013621 -0.015" quat="-0.218508 -0.218508 0.672499 0.672499"/>
+          <geom class="visual" mesh="6901" pos="0.111777 0.0503088 0" quat="0.630037 0.630037 -0.32102 -0.32102" rgba="0.898 0.898 0.898 1"/>
+          <geom class="visual" mesh="6901" pos="0.0146946 -0.0202254 0" quat="0.630037 0.630037 -0.32102 -0.32102" rgba="0.898 0.898 0.898 1"/>
+          <geom class="visual" mesh="unionHorn" pos="0.0567108 0.0755037 -0.0325938" quat="0.672499 0.672499 0.218508 0.218508" rgba="0.000 0.000 0.000 1"/>
+          <geom class="collision" mesh="unionHorn" pos="0.0567108 0.0755037 -0.0325938" quat="0.672499 0.672499 0.218508 0.218508"/>
+          <geom class="visual" mesh="servo_horn" pos="-0.0146946 0.0202254 0" quat="0.674138 0.67082 0.223607 0.213396" rgba="0.867 0.910 1.000 1"/>
+          <geom class="visual" mesh="servo_horn" pos="0.0823874 0.0907597 0" quat="0.674138 0.67082 0.223607 0.213396" rgba="0.867 0.910 1.000 1"/>
+          <body name="L1_tibia" pos="0.097082 0.0705342 0">
+            <inertial pos="0.0166262 0.0115893 -0.0488036" mass="0.14381" fullinertia="0.000615039 0.000634373 0.000120352 -2.68698e-05 0.000159122 0.00011282"/>
+            <joint name="L1_knee" class="mg995" axis="0.587785 -0.809017 0"/>
+            <geom class="visual" mesh="Servo15" pos="0.019074 -0.0158076 -0.0306344" quat="0.823639 -0.154508 0.475528 0.267617" rgba="0.329 0.537 0.220 1"/>
+            <geom class="visual" mesh="PataBaseLargaRodamientoV2" pos="0.00482338 -0.0261612 0.0198753" quat="0.45399 0 0 0.891007" rgba="0.059 0.059 0.059 1"/>
+            <geom class="collision" mesh="PataBaseLargaRodamientoV2" pos="0.00482338 -0.0261612 0.0198753" quat="0.45399 0 0 0.891007"/>
+            <geom class="visual" mesh="PataTapaLargaServoHornV2" pos="-0.0230964 0.0122671 0.0198753" quat="0 0.891007 -0.45399 0" rgba="0.000 0.000 0.000 1"/>
+            <geom class="collision" mesh="PataTapaLargaServoHornV2" pos="-0.0230964 0.0122671 0.0198753" quat="0 0.891007 -0.45399 0"/>
+            <geom class="visual" mesh="SoporteServoToweV2" pos="0.0625893 0.0238426 -0.121465" quat="0.823639 -0.154508 0.475528 0.267617" rgba="1.000 0.235 0.000 1"/>
+            <geom class="visual" mesh="PieEsfera_Nucleo_PLA" pos="0.0446353 0.0315024 -0.152671" quat="0.672499 -0.218508 0.672499 0.218508" rgba="0.059 0.059 0.059 1"/>
+            <geom class="visual" mesh="PieEsfera_Suela_TPU" pos="0.0446353 0.0315024 -0.152671" quat="0.672499 -0.218508 0.672499 0.218508" rgba="1 0.235 0 1"/>
+            <geom name="L1_foot" class="foot" pos="0.0446353 0.0315024 -0.172671"/>
+            <site name="L1_foot" pos="0.0446353 0.0315024 -0.172671" size="0.019"/>
+          </body>
+        </body>
+      </body>
+      <body name="L2_coxa" pos="-0.0383603 0.118732 0">
+        <inertial pos="-0.0128941 0.0342555 -0.000248578" mass="0.115033" fullinertia="7.31794e-05 6.02449e-05 5.68148e-05 6.14157e-06 3.5049e-06 -8.87738e-06"/>
+        <joint name="L2_hip_yaw" class="mg995" axis="0 0 1"/>
+        <geom class="visual" mesh="SoporteServo" pos="-0.0025942 0.051671 0.128617" quat="0.415627 0.572061 -0.415627 0.572061" rgba="1.000 0.200 0.000 1"/>
+        <geom class="collision" mesh="SoporteServo" pos="-0.0025942 0.051671 0.128617" quat="0.415627 0.572061 -0.415627 0.572061"/>
+        <geom class="visual" mesh="ServomotorFinal_2" pos="0.0020252 0.0584884 0.0223" quat="0.415627 0.572061 -0.415627 0.572061" rgba="0.361 0.600 0.239 1"/>
+        <geom class="visual" mesh="SoporteServoRodamiento" pos="0.00753232 0.0447753 0.128617" quat="0.572061 -0.415627 -0.572061 -0.415627" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="SoporteServoHorn" pos="-0.0382588 0.0400829 0.128617" quat="0.415627 0.572061 -0.415627 0.572061" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="servoHornRodamiento" pos="0.00654042 0.0284117 -0.0215" quat="0 0.809017 -0.587785 0" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="servoHornArriba" pos="0.0218084 0.0383565 0.031" quat="0 0.809017 -0.587785 0" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="6901_2" pos="0 0 -0.028" quat="0.572061 -0.415627 -0.572061 -0.415627" rgba="0.898 0.898 0.898 1"/>
+        <geom class="visual" mesh="servo_horn_2" pos="0 0 0.028" quat="0 0.587785 0.809017 0" rgba="0.867 0.910 1.000 1"/>
+        <body name="L2_femur" pos="-0.0177409 0.0416566 -0.0079">
+          <inertial pos="-0.00811322 0.0604023 1.64958e-05" mass="0.0512586" fullinertia="0.000140383 4.8523e-05 0.00017809 3.32252e-05 -8.68953e-09 -4.19906e-08"/>
+          <joint name="L2_hip_pitch" class="mg995" axis="0.951057 0.309017 0"/>
+          <geom class="visual" mesh="unionRodamiento" pos="0.0255616 0.034592 -0.015" quat="0.572061 0.572061 -0.415627 -0.415627" rgba="0.000 0.000 0.000 1"/>
+          <geom class="collision" mesh="unionRodamiento" pos="0.0255616 0.034592 -0.015" quat="0.572061 0.572061 -0.415627 -0.415627"/>
+          <geom class="visual" mesh="6901" pos="-0.0133056 0.121852 0" quat="0.698401 0.698401 0.110616 0.110616" rgba="0.898 0.898 0.898 1"/>
+          <geom class="visual" mesh="6901" pos="0.0237764 0.00772542 0" quat="0.698401 0.698401 0.110616 0.110616" rgba="0.898 0.898 0.898 1"/>
+          <geom class="visual" mesh="unionHorn" pos="-0.0542837 0.0772671 -0.0325938" quat="0.415627 0.415627 0.572061 0.572061" rgba="0.000 0.000 0.000 1"/>
+          <geom class="collision" mesh="unionHorn" pos="-0.0542837 0.0772671 -0.0325938" quat="0.415627 0.415627 0.572061 0.572061"/>
+          <geom class="visual" mesh="servo_horn" pos="-0.0237764 -0.00772542 0" quat="0.419958 0.411272 0.5752 0.56889" rgba="0.867 0.910 1.000 1"/>
+          <geom class="visual" mesh="servo_horn" pos="-0.0608585 0.106401 0" quat="0.419958 0.411272 0.5752 0.56889" rgba="0.867 0.910 1.000 1"/>
+          <body name="L2_tibia" pos="-0.037082 0.114127 0">
+            <inertial pos="-0.00588431 0.0193937 -0.0488036" mass="0.14381" fullinertia="0.00064832 0.000601091 0.000120352 1.6056e-05 -5.81269e-05 0.000186197"/>
+            <joint name="L2_knee" class="mg995" axis="0.951057 0.309017 0"/>
+            <geom class="visual" mesh="Servo15" pos="0.0209281 0.0132557 -0.0306344" quat="0.509037 -0.404508 0.293893 0.700629" rgba="0.329 0.537 0.220 1"/>
+            <geom class="visual" mesh="PataBaseLargaRodamientoV2" pos="0.0263713 -0.00349697 0.0198753" quat="-0.156434 0 0 0.987688" rgba="0.059 0.059 0.059 1"/>
+            <geom class="collision" mesh="PataBaseLargaRodamientoV2" pos="0.0263713 -0.00349697 0.0198753" quat="-0.156434 0 0 0.987688"/>
+            <geom class="visual" mesh="PataTapaLargaServoHornV2" pos="-0.0188039 -0.0181753 0.0198753" quat="0 0.987688 0.156434 0" rgba="0.000 0.000 0.000 1"/>
+            <geom class="collision" mesh="PataTapaLargaServoHornV2" pos="-0.0188039 -0.0181753 0.0198753" quat="0 0.987688 0.156434 0"/>
+            <geom class="visual" mesh="SoporteServoToweV2" pos="-0.00333451 0.0668937 -0.121465" quat="0.509037 -0.404508 0.293893 0.700629" rgba="1.000 0.235 0.000 1"/>
+            <geom class="visual" mesh="PieEsfera_Nucleo_PLA" pos="-0.0161675 0.0521855 -0.152671" quat="-0.415627 0.572061 -0.415627 -0.572061" rgba="0.059 0.059 0.059 1"/>
+            <geom class="visual" mesh="PieEsfera_Suela_TPU" pos="-0.0161675 0.0521855 -0.152671" quat="-0.415627 0.572061 -0.415627 -0.572061" rgba="1 0.235 0 1"/>
+            <geom name="L2_foot" class="foot" pos="-0.0161675 0.0521855 -0.172671"/>
+            <site name="L2_foot" pos="-0.0161675 0.0521855 -0.172671" size="0.019"/>
+          </body>
+        </body>
+      </body>
+      <body name="L3_coxa" pos="-0.12422 -0.000269232 0">
+        <inertial pos="-0.0365635 -0.00167749 -0.000248578" mass="0.115033" fullinertia="5.78701e-05 7.55542e-05 5.68148e-05 -1.16728e-06 9.52597e-06 5.90099e-07"/>
+        <joint name="L3_hip_yaw" class="mg995" axis="0 0 1"/>
+        <geom class="visual" mesh="SoporteServo" pos="-0.0499437 0.0135 0.128617" quat="0 0.707107 0 0.707107" rgba="1.000 0.200 0.000 1"/>
+        <geom class="collision" mesh="SoporteServo" pos="-0.0499437 0.0135 0.128617" quat="0 0.707107 0 0.707107"/>
+        <geom class="visual" mesh="ServomotorFinal_2" pos="-0.055 0.02 0.0223" quat="0 0.707107 0 0.707107" rgba="0.361 0.600 0.239 1"/>
+        <geom class="visual" mesh="SoporteServoRodamiento" pos="-0.0402563 0.021 0.128617" quat="0.707107 0 -0.707107 0" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="SoporteServoHorn" pos="-0.0499437 -0.024 0.128617" quat="0 0.707107 0 0.707107" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="servoHornRodamiento" pos="-0.025 0.015 -0.0215" quat="0 1 0 0" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="servoHornArriba" pos="-0.02974 0.0325938 0.031" quat="0 1 0 0" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="6901_2" pos="0 0 -0.028" quat="0.707107 0 -0.707107 0" rgba="0.898 0.898 0.898 1"/>
+        <geom class="visual" mesh="servo_horn_2" pos="0 0 0.028" quat="0 0 1 0" rgba="0.867 0.910 1.000 1"/>
+        <body name="L3_femur" pos="-0.0451 -0.004 -0.0079">
+          <inertial pos="-0.0599531 0.0109492 1.64958e-05" mass="0.0512586" fullinertia="3.77656e-05 0.00015114 0.00017809 1.17221e-07 3.72502e-08 -2.124e-08"/>
+          <joint name="L3_hip_pitch" class="mg995" axis="0 1 0"/>
+          <geom class="visual" mesh="unionRodamiento" pos="-0.025 0.035 -0.015" quat="0.707107 0.707107 0 0" rgba="0.000 0.000 0.000 1"/>
+          <geom class="collision" mesh="unionRodamiento" pos="-0.025 0.035 -0.015" quat="0.707107 0.707107 0 0"/>
+          <geom class="visual" mesh="6901" pos="-0.12 0.025 0" quat="0.5 0.5 0.5 0.5" rgba="0.898 0.898 0.898 1"/>
+          <geom class="visual" mesh="6901" pos="0 0.025 0" quat="0.5 0.5 0.5 0.5" rgba="0.898 0.898 0.898 1"/>
+          <geom class="visual" mesh="unionHorn" pos="-0.09026 -0.02775 -0.0325938" quat="0 0 0.707107 0.707107" rgba="0.000 0.000 0.000 1"/>
+          <geom class="collision" mesh="unionHorn" pos="-0.09026 -0.02775 -0.0325938" quat="0 0 0.707107 0.707107"/>
+          <geom class="visual" mesh="servo_horn" pos="0 -0.025 0" quat="0.00536798 -0.00536798 0.707086 0.707086" rgba="0.867 0.910 1.000 1"/>
+          <geom class="visual" mesh="servo_horn" pos="-0.12 -0.025 0" quat="0.00536798 -0.00536798 0.707086 0.707086" rgba="0.867 0.910 1.000 1"/>
+          <body name="L3_tibia" pos="-0.12 0 0">
+            <inertial pos="-0.0202629 0.000396684 -0.0488036" mass="0.14381" fullinertia="0.000596164 0.000653248 0.000120352 8.90718e-07 -0.000195046 2.25599e-06"/>
+            <joint name="L3_knee" class="mg995" axis="0 1 0"/>
+            <geom class="visual" mesh="Servo15" pos="-0.00613975 0.024 -0.0306344" quat="0 -0.5 0 0.866025" rgba="0.329 0.537 0.220 1"/>
+            <geom class="visual" mesh="PataBaseLargaRodamientoV2" pos="0.011475 0.024 0.0198753" quat="0.707107 0 0 -0.707107" rgba="0.059 0.059 0.059 1"/>
+            <geom class="collision" mesh="PataBaseLargaRodamientoV2" pos="0.011475 0.024 0.0198753" quat="0.707107 0 0 -0.707107"/>
+            <geom class="visual" mesh="PataTapaLargaServoHornV2" pos="0.011475 -0.0235 0.0198753" quat="0 0.707107 0.707107 0" rgba="0.000 0.000 0.000 1"/>
+            <geom class="collision" mesh="PataTapaLargaServoHornV2" pos="0.011475 -0.0235 0.0198753" quat="0 0.707107 0.707107 0"/>
+            <geom class="visual" mesh="SoporteServoToweV2" pos="-0.0646502 0.0175 -0.121465" quat="0 -0.5 0 0.866025" rgba="1.000 0.235 0.000 1"/>
+            <geom class="visual" mesh="PieEsfera_Nucleo_PLA" pos="-0.0546274 0.00075 -0.152671" quat="0 0.707107 0 -0.707107" rgba="0.059 0.059 0.059 1"/>
+            <geom class="visual" mesh="PieEsfera_Suela_TPU" pos="-0.0546274 0.00075 -0.152671" quat="0 0.707107 0 -0.707107" rgba="1 0.235 0 1"/>
+            <geom name="L3_foot" class="foot" pos="-0.0546274 0.00075 -0.172671"/>
+            <site name="L3_foot" pos="-0.0546274 0.00075 -0.172671" size="0.019"/>
+          </body>
+        </body>
+      </body>
+      <body name="L4_coxa" pos="-0.0382106 -0.117963 0">
+        <inertial pos="-0.00970334 -0.0352923 -0.000248578" mass="0.115033" fullinertia="7.45516e-05 5.88726e-05 5.68148e-05 -4.25288e-06 2.38247e-06 9.24208e-06"/>
+        <joint name="L4_hip_yaw" class="mg995" axis="0 0 1"/>
+        <geom class="visual" mesh="SoporteServo" pos="-0.0282727 -0.0433276 0.128617" quat="-0.415627 0.572061 0.415627 0.572061" rgba="1.000 0.200 0.000 1"/>
+        <geom class="collision" mesh="SoporteServo" pos="-0.0282727 -0.0433276 0.128617" quat="-0.415627 0.572061 0.415627 0.572061"/>
+        <geom class="visual" mesh="ServomotorFinal_2" pos="-0.0360171 -0.0461278 0.0223" quat="-0.415627 0.572061 0.415627 0.572061" rgba="0.361 0.600 0.239 1"/>
+        <geom class="visual" mesh="SoporteServoRodamiento" pos="-0.0324121 -0.0317966 0.128617" quat="0.572061 0.415627 -0.572061 0.415627" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="SoporteServoHorn" pos="0.00739189 -0.0549157 0.128617" quat="-0.415627 0.572061 0.415627 0.572061" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="servoHornRodamiento" pos="-0.0219913 -0.0191412 -0.0215" quat="0 0.809017 0.587785 0" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="servoHornArriba" pos="-0.0401887 -0.0182124 0.031" quat="0 0.809017 0.587785 0" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="6901_2" pos="0 0 -0.028" quat="0.572061 0.415627 -0.572061 0.415627" rgba="0.898 0.898 0.898 1"/>
+        <geom class="visual" mesh="servo_horn_2" pos="0 0 0.028" quat="0 -0.587785 0.809017 0" rgba="0.867 0.910 1.000 1"/>
+        <body name="L4_femur" pos="-0.0101324 -0.0441287 -0.0079">
+          <inertial pos="-0.0289398 -0.0536353 1.64958e-05" mass="0.0512586" fullinertia="0.000140245 4.86608e-05 0.00017809 -3.34149e-05 3.17114e-08 2.88635e-08"/>
+          <joint name="L4_hip_pitch" class="mg995" axis="-0.951057 0.309017 0"/>
+          <geom class="visual" mesh="unionRodamiento" pos="-0.0410124 -0.0129608 -0.015" quat="0.572061 0.572061 0.415627 0.415627" rgba="0.000 0.000 0.000 1"/>
+          <geom class="collision" mesh="unionRodamiento" pos="-0.0410124 -0.0129608 -0.015" quat="0.572061 0.572061 0.415627 0.415627"/>
+          <geom class="visual" mesh="6901" pos="-0.0608585 -0.106401 0" quat="0.110616 0.110616 0.698401 0.698401" rgba="0.898 0.898 0.898 1"/>
+          <geom class="visual" mesh="6901" pos="-0.0237764 0.00772542 0" quat="0.110616 0.110616 0.698401 0.698401" rgba="0.898 0.898 0.898 1"/>
+          <geom class="visual" mesh="unionHorn" pos="-0.00150004 -0.0944175 -0.0325938" quat="-0.415627 -0.415627 0.572061 0.572061" rgba="0.000 0.000 0.000 1"/>
+          <geom class="collision" mesh="unionHorn" pos="-0.00150004 -0.0944175 -0.0325938" quat="-0.415627 -0.415627 0.572061 0.572061"/>
+          <geom class="visual" mesh="servo_horn" pos="0.0237764 -0.00772542 0" quat="-0.411272 -0.419958 0.56889 0.5752" rgba="0.867 0.910 1.000 1"/>
+          <geom class="visual" mesh="servo_horn" pos="-0.0133056 -0.121852 0" quat="-0.411272 -0.419958 0.56889 0.5752" rgba="0.867 0.910 1.000 1"/>
+          <body name="L4_tibia" pos="-0.037082 -0.114127 0">
+            <inertial pos="-0.00663885 -0.0191486 -0.0488036" mass="0.14381" fullinertia="0.000647273 0.000602138 0.000120352 -1.74972e-05 -6.24181e-05 -0.000184803"/>
+            <joint name="L4_knee" class="mg995" axis="-0.951057 0.309017 0"/>
+            <geom class="visual" mesh="Servo15" pos="-0.0247226 0.00157716 -0.0306344" quat="0.509037 0.404508 0.293893 -0.700629" rgba="0.329 0.537 0.220 1"/>
+            <geom class="visual" mesh="PataBaseLargaRodamientoV2" pos="-0.0192794 0.0183298 0.0198753" quat="0.987688 0 0 -0.156434" rgba="0.059 0.059 0.059 1"/>
+            <geom class="collision" mesh="PataBaseLargaRodamientoV2" pos="-0.0192794 0.0183298 0.0198753" quat="0.987688 0 0 -0.156434"/>
+            <geom class="visual" mesh="PataTapaLargaServoHornV2" pos="0.0258958 0.00365147 0.0198753" quat="0 0.156434 0.987688 0" rgba="0.000 0.000 0.000 1"/>
+            <geom class="collision" mesh="PataTapaLargaServoHornV2" pos="0.0258958 0.00365147 0.0198753" quat="0 0.156434 0.987688 0"/>
+            <geom class="visual" mesh="SoporteServoToweV2" pos="-0.0366215 -0.0560782 -0.121465" quat="0.509037 0.404508 0.293893 -0.700629" rgba="1.000 0.235 0.000 1"/>
+            <geom class="visual" mesh="PieEsfera_Nucleo_PLA" pos="-0.0175941 -0.051722 -0.152671" quat="0.415627 0.572061 0.415627 -0.572061" rgba="0.059 0.059 0.059 1"/>
+            <geom class="visual" mesh="PieEsfera_Suela_TPU" pos="-0.0175941 -0.051722 -0.152671" quat="0.415627 0.572061 0.415627 -0.572061" rgba="1 0.235 0 1"/>
+            <geom name="L4_foot" class="foot" pos="-0.0175941 -0.051722 -0.172671"/>
+            <site name="L4_foot" pos="-0.0175941 -0.051722 -0.172671" size="0.019"/>
+          </body>
+        </body>
+      </body>
+      <body name="L5_coxa" pos="0.100337 -0.0730696 0">
+        <inertial pos="0.0305665 -0.0201343 -0.000248578" mass="0.115033" fullinertia="6.28696e-05 7.05546e-05 5.68148e-05 8.04858e-06 -8.05352e-06 5.12182e-06"/>
+        <joint name="L5_hip_yaw" class="mg995" axis="0 0 1"/>
+        <geom class="visual" mesh="SoporteServo" pos="0.0324702 -0.0402779 0.128617" quat="0.672499 -0.218508 -0.672499 -0.218508" rgba="1.000 0.200 0.000 1"/>
+        <geom class="collision" mesh="SoporteServo" pos="0.0324702 -0.0402779 0.128617" quat="0.672499 -0.218508 -0.672499 -0.218508"/>
+        <geom class="visual" mesh="ServomotorFinal_2" pos="0.0327402 -0.0485085 0.0223" quat="0.672499 -0.218508 -0.672499 -0.218508" rgba="0.361 0.600 0.239 1"/>
+        <geom class="visual" mesh="SoporteServoRodamiento" pos="0.0202245 -0.0406514 0.128617" quat="0.218508 0.672499 -0.218508 0.672499" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="SoporteServoHorn" pos="0.0545122 -0.00993978 0.128617" quat="0.672499 -0.218508 -0.672499 -0.218508" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="servoHornRodamiento" pos="0.0114086 -0.0268299 -0.0215" quat="0 0.309017 0.951057 0" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="servoHornArriba" pos="0.00490203 -0.0438497 0.031" quat="0 0.309017 0.951057 0" rgba="0.000 0.000 0.000 1"/>
+        <geom class="visual" mesh="6901_2" pos="0 0 -0.028" quat="0.218508 0.672499 -0.218508 0.672499" rgba="0.898 0.898 0.898 1"/>
+        <geom class="visual" mesh="servo_horn_2" pos="0 0 0.028" quat="0 0.951057 -0.309017 0" rgba="0.867 0.910 1.000 1"/>
+        <body name="L5_femur" pos="0.0388378 -0.023273 -0.0079">
+          <inertial pos="0.0420673 -0.0440977 1.64958e-05" mass="0.0512586" fullinertia="7.70471e-05 0.000111859 0.00017809 5.39492e-05 -1.76515e-08 3.90787e-08"/>
+          <joint name="L5_hip_pitch" class="mg995" axis="-0.587785 -0.809017 0"/>
+          <geom class="visual" mesh="unionRodamiento" pos="-0.000347059 -0.0430102 -0.015" quat="0.218508 0.218508 0.672499 0.672499" rgba="0.000 0.000 0.000 1"/>
+          <geom class="collision" mesh="unionRodamiento" pos="-0.000347059 -0.0430102 -0.015" quat="0.218508 0.218508 0.672499 0.672499"/>
+          <geom class="visual" mesh="6901" pos="0.0823874 -0.0907597 0" quat="-0.32102 -0.32102 0.630037 0.630037" rgba="0.898 0.898 0.898 1"/>
+          <geom class="visual" mesh="6901" pos="-0.0146946 -0.0202254 0" quat="-0.32102 -0.32102 0.630037 0.630037" rgba="0.898 0.898 0.898 1"/>
+          <geom class="visual" mesh="unionHorn" pos="0.0893329 -0.0306033 -0.0325938" quat="0.672499 0.672499 -0.218508 -0.218508" rgba="0.000 0.000 0.000 1"/>
+          <geom class="collision" mesh="unionHorn" pos="0.0893329 -0.0306033 -0.0325938" quat="0.672499 0.672499 -0.218508 -0.218508"/>
+          <geom class="visual" mesh="servo_horn" pos="0.0146946 0.0202254 0" quat="0.67082 0.674138 -0.213396 -0.223607" rgba="0.867 0.910 1.000 1"/>
+          <geom class="visual" mesh="servo_horn" pos="0.111777 -0.0503088 0" quat="0.67082 0.674138 -0.213396 -0.223607" rgba="0.867 0.910 1.000 1"/>
+          <body name="L5_tibia" pos="0.097082 -0.0705342 0">
+            <inertial pos="0.0161599 -0.0122312 -0.0488036" mass="0.14381" fullinertia="0.000616733 0.000632679 0.000120352 2.74203e-05 0.000156469 -0.00011647"/>
+            <joint name="L5_knee" class="mg995" axis="-0.587785 -0.809017 0"/>
+            <geom class="visual" mesh="Servo15" pos="-0.00913969 -0.0230253 -0.0306344" quat="0.823639 0.154508 0.475528 -0.267617" rgba="0.329 0.537 0.220 1"/>
+            <geom class="visual" mesh="PataBaseLargaRodamientoV2" pos="-0.0233903 -0.0126716 0.0198753" quat="0.891007 0 0 0.45399" rgba="0.059 0.059 0.059 1"/>
+            <geom class="collision" mesh="PataBaseLargaRodamientoV2" pos="-0.0233903 -0.0126716 0.0198753" quat="0.891007 0 0 0.45399"/>
+            <geom class="visual" mesh="PataTapaLargaServoHornV2" pos="0.00452948 0.0257567 0.0198753" quat="0 -0.45399 0.891007 0" rgba="0.000 0.000 0.000 1"/>
+            <geom class="collision" mesh="PataTapaLargaServoHornV2" pos="0.00452948 0.0257567 0.0198753" quat="0 -0.45399 0.891007 0"/>
+            <geom class="visual" mesh="SoporteServoToweV2" pos="0.0420168 -0.0521582 -0.121465" quat="0.823639 0.154508 0.475528 -0.267617" rgba="1.000 0.235 0.000 1"/>
+            <geom class="visual" mesh="PieEsfera_Nucleo_PLA" pos="0.0437536 -0.0327159 -0.152671" quat="0.672499 0.218508 0.672499 -0.218508" rgba="0.059 0.059 0.059 1"/>
+            <geom class="visual" mesh="PieEsfera_Suela_TPU" pos="0.0437536 -0.0327159 -0.152671" quat="0.672499 0.218508 0.672499 -0.218508" rgba="1 0.235 0 1"/>
+            <geom name="L5_foot" class="foot" pos="0.0437536 -0.0327159 -0.172671"/>
+            <site name="L5_foot" pos="0.0437536 -0.0327159 -0.172671" size="0.019"/>
+          </body>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <position name="L1_hip_yaw" joint="L1_hip_yaw" class="mg995"/>
+    <position name="L1_hip_pitch" joint="L1_hip_pitch" class="mg995"/>
+    <position name="L1_knee" joint="L1_knee" class="mg995"/>
+    <position name="L2_hip_yaw" joint="L2_hip_yaw" class="mg995"/>
+    <position name="L2_hip_pitch" joint="L2_hip_pitch" class="mg995"/>
+    <position name="L2_knee" joint="L2_knee" class="mg995"/>
+    <position name="L3_hip_yaw" joint="L3_hip_yaw" class="mg995"/>
+    <position name="L3_hip_pitch" joint="L3_hip_pitch" class="mg995"/>
+    <position name="L3_knee" joint="L3_knee" class="mg995"/>
+    <position name="L4_hip_yaw" joint="L4_hip_yaw" class="mg995"/>
+    <position name="L4_hip_pitch" joint="L4_hip_pitch" class="mg995"/>
+    <position name="L4_knee" joint="L4_knee" class="mg995"/>
+    <position name="L5_hip_yaw" joint="L5_hip_yaw" class="mg995"/>
+    <position name="L5_hip_pitch" joint="L5_hip_pitch" class="mg995"/>
+    <position name="L5_knee" joint="L5_knee" class="mg995"/>
+  </actuator>
+
+  <sensor>
+    <framequat name="imu_quat" objtype="site" objname="imu"/>
+    <gyro name="imu_gyro" site="imu"/>
+    <accelerometer name="imu_acc" site="imu"/>
+    <velocimeter name="imu_vel" site="imu"/>
+    <jointpos name="L1_hip_yaw_pos" joint="L1_hip_yaw"/>
+    <jointpos name="L1_hip_pitch_pos" joint="L1_hip_pitch"/>
+    <jointpos name="L1_knee_pos" joint="L1_knee"/>
+    <jointpos name="L2_hip_yaw_pos" joint="L2_hip_yaw"/>
+    <jointpos name="L2_hip_pitch_pos" joint="L2_hip_pitch"/>
+    <jointpos name="L2_knee_pos" joint="L2_knee"/>
+    <jointpos name="L3_hip_yaw_pos" joint="L3_hip_yaw"/>
+    <jointpos name="L3_hip_pitch_pos" joint="L3_hip_pitch"/>
+    <jointpos name="L3_knee_pos" joint="L3_knee"/>
+    <jointpos name="L4_hip_yaw_pos" joint="L4_hip_yaw"/>
+    <jointpos name="L4_hip_pitch_pos" joint="L4_hip_pitch"/>
+    <jointpos name="L4_knee_pos" joint="L4_knee"/>
+    <jointpos name="L5_hip_yaw_pos" joint="L5_hip_yaw"/>
+    <jointpos name="L5_hip_pitch_pos" joint="L5_hip_pitch"/>
+    <jointpos name="L5_knee_pos" joint="L5_knee"/>
+    <jointvel name="L1_hip_yaw_vel" joint="L1_hip_yaw"/>
+    <jointvel name="L1_hip_pitch_vel" joint="L1_hip_pitch"/>
+    <jointvel name="L1_knee_vel" joint="L1_knee"/>
+    <jointvel name="L2_hip_yaw_vel" joint="L2_hip_yaw"/>
+    <jointvel name="L2_hip_pitch_vel" joint="L2_hip_pitch"/>
+    <jointvel name="L2_knee_vel" joint="L2_knee"/>
+    <jointvel name="L3_hip_yaw_vel" joint="L3_hip_yaw"/>
+    <jointvel name="L3_hip_pitch_vel" joint="L3_hip_pitch"/>
+    <jointvel name="L3_knee_vel" joint="L3_knee"/>
+    <jointvel name="L4_hip_yaw_vel" joint="L4_hip_yaw"/>
+    <jointvel name="L4_hip_pitch_vel" joint="L4_hip_pitch"/>
+    <jointvel name="L4_knee_vel" joint="L4_knee"/>
+    <jointvel name="L5_hip_yaw_vel" joint="L5_hip_yaw"/>
+    <jointvel name="L5_hip_pitch_vel" joint="L5_hip_pitch"/>
+    <jointvel name="L5_knee_vel" joint="L5_knee"/>
+    <actuatorfrc name="L1_hip_yaw_tau" actuator="L1_hip_yaw"/>
+    <actuatorfrc name="L1_hip_pitch_tau" actuator="L1_hip_pitch"/>
+    <actuatorfrc name="L1_knee_tau" actuator="L1_knee"/>
+    <actuatorfrc name="L2_hip_yaw_tau" actuator="L2_hip_yaw"/>
+    <actuatorfrc name="L2_hip_pitch_tau" actuator="L2_hip_pitch"/>
+    <actuatorfrc name="L2_knee_tau" actuator="L2_knee"/>
+    <actuatorfrc name="L3_hip_yaw_tau" actuator="L3_hip_yaw"/>
+    <actuatorfrc name="L3_hip_pitch_tau" actuator="L3_hip_pitch"/>
+    <actuatorfrc name="L3_knee_tau" actuator="L3_knee"/>
+    <actuatorfrc name="L4_hip_yaw_tau" actuator="L4_hip_yaw"/>
+    <actuatorfrc name="L4_hip_pitch_tau" actuator="L4_hip_pitch"/>
+    <actuatorfrc name="L4_knee_tau" actuator="L4_knee"/>
+    <actuatorfrc name="L5_hip_yaw_tau" actuator="L5_hip_yaw"/>
+    <actuatorfrc name="L5_hip_pitch_tau" actuator="L5_hip_pitch"/>
+    <actuatorfrc name="L5_knee_tau" actuator="L5_knee"/>
+    <touch name="L1_foot_touch" site="L1_foot"/>
+    <touch name="L2_foot_touch" site="L2_foot"/>
+    <touch name="L3_foot_touch" site="L3_foot"/>
+    <touch name="L4_foot_touch" site="L4_foot"/>
+    <touch name="L5_foot_touch" site="L5_foot"/>
+  </sensor>
+  <keyframe>
+    <key name="home" qpos="0 0 0.198571 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" ctrl="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+    <key name="cad" qpos="0 0 0.198571 1 0 0 0 0 0 0 0 1.30875 -1.39626 0 1.39626 0.523599 0 0 0 0 0 0" ctrl="0 0 0 0 1.30875 -1.39626 0 1.39626 0.523599 0 0 0 0 0 0"/>
+  </keyframe>
+</mujoco>
